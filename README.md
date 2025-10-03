@@ -1,3 +1,4 @@
+¡Perfecto, Marcelo! 🚀 Te actualizo el **README – Parte 1** con tus resultados reales de tamaños y tiempos. Así queda documentado el benchmark 👇
 
 ---
 
@@ -54,9 +55,6 @@ Crea un CSV de prueba en `data/ventas_100mb.csv`:
 python make_100mb_csv.py
 ```
 
-* Por defecto cubre fechas de 2023 y regiones: Norte/Sur/Este/Oeste.
-* Podés ajustar el tamaño editando `TARGET_MB` en el script.
-
 ## 2) Exportar a múltiples formatos
 
 Genera:
@@ -82,30 +80,47 @@ Mide:
 python benchmark_formatos.py
 ```
 
-### 👉 Interpretación esperada
+### ✅ Resultados obtenidos
 
-* **CSV**: ocupa más y es más lento en lectura total; gz reduce tamaño pero no siempre el tiempo.
-* **Parquet**: suele ser más chico y rápido.
-* **Parquet particionado**: lectura **con filtro** (p. ej. un mes) debe ser **mucho más rápida** porque lee solo la partición necesaria.
+**Tamaño en disco:**
 
-## 🧪 Resultados (completá con tus números)
+* CSV plano              : 124.70 MB
+* CSV gzip               : 33.75 MB
+* Parquet                : 29.74 MB
+* Parquet particionado   : 49.94 MB
 
-Reemplazá `—` con los valores que te imprime `benchmark_formatos.py`.
+**Tiempo de lectura total:**
 
-| Formato              | Tamaño (MB) | Tiempo lectura total (s) | Tiempo lectura filtro mes (s) | Filas mes |
-| -------------------- | ----------- | ------------------------ | ----------------------------- | --------- |
-| CSV plano            | —           | —                        | —                             | —         |
-| CSV gzip             | —           | —                        | —                             | —         |
-| Parquet              | —           | —                        | —                             | —         |
-| Parquet particionado | —           | —                        | —                             | —         |
+* CSV plano              : 1.27 s
+* CSV gzip               : 1.58 s
+* Parquet                : 0.40 s
+* Parquet particionado   : 0.39 s
 
-> Tip: si usás OneDrive, **pausá el sync** durante las escrituras grandes para evitar bloqueos.
+**Tiempo de lectura con filtro (mes=2023-07):**
 
-## 🔧 Variantes útiles
+* CSV plano              : 1.29 s, filas=254,540
+* CSV gzip               : 1.60 s, filas=254,540
+* Parquet                : 0.40 s, filas=254,540
+* Parquet particionado   : 0.04 s, filas=254,540
 
-* **Más años**: en `make_100mb_csv.py`, cambiá `start/end` (ej. 2022–2024).
-* **Partición más granular**: en `exportar_formatos.py`, podés usar
-  `partition_cols=["anio","mes_num","región"]` tras crear esas columnas.
+### 📊 Comparación en tabla
+
+| Formato              | Tamaño (MB) | Lectura total (s) | Lectura filtro mes (s) | Filas mes |
+| -------------------- | ----------- | ----------------- | ---------------------- | --------- |
+| CSV plano            | 124.70      | 1.27              | 1.29                   | 254,540   |
+| CSV gzip             | 33.75       | 1.58              | 1.60                   | 254,540   |
+| Parquet              | 29.74       | 0.40              | 0.40                   | 254,540   |
+| Parquet particionado | 49.94       | 0.39              | **0.04**               | 254,540   |
 
 ---
+
+## 🧪 Conclusiones rápidas
+
+* **Parquet** es más compacto y veloz que CSV.
+* **CSV gzip** reduce mucho tamaño, pero penaliza un poco la velocidad de lectura.
+* **Parquet particionado** sobresale al filtrar: carga solo la carpeta del mes y es **~10× más rápido** que leer todo.
+
+---
+
+
 
