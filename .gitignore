@@ -1,7 +1,7 @@
 .venv/
 __pycache__/
 outputs/
-*.zip
-*.csv
 data/*.csv
 data/*.zip
+*.parquet
+*.gz
